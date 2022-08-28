@@ -1,0 +1,29 @@
+version: '3'
+services:
+  api:
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile
+    ports:
+      - 4444:4444
+    depends_on:
+      - mongo
+    environment:
+      MONGO_URL: mongodb://mongo:27017/shortener
+    restart: always
+
+  ui:
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+    ports:
+      - 3000:3000
+    depends_on:
+      - api
+    restart: always
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    restart: always
