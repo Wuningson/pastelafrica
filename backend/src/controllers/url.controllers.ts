@@ -3,6 +3,7 @@ import urlSchema from '../schema/url.schema';
 import CustomError from '../global/custom-error';
 import { CreateUrlValidator } from '../validators/url.validators';
 import env from '../config/env';
+import randomstring from 'randomstring';
 
 const shortenUrl: RequestHandler<{}, {}, ShortenUrlBody> = async (
   req,
@@ -15,8 +16,17 @@ const shortenUrl: RequestHandler<{}, {}, ShortenUrlBody> = async (
       throw new CustomError(error.details[0].message, 400);
     }
 
+    let short = randomstring.generate(6);
+    let check: null | string = null;
+    while (!check) {
+      const checkIfExists = await urlSchema.findOne({ shortUrl: short });
+      if (!checkIfExists) {
+        check = short;
+      }
+    }
     const shortenedUrl = await urlSchema.create({
       longUrl: req.body.url,
+      shortUrl: short,
     });
 
     return res.status(201).json({

@@ -63,7 +63,11 @@ function App() {
       }
 
       dispatch(setLoading(true));
+      setShortenedUrl('');
+
       const { data } = await ShortenApiService.shortenUrl({ url });
+
+      setUrl('');
       setShortenedUrl(data.url);
     } catch (err) {
       if (axios.isAxiosError(err)) {

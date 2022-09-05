@@ -1,5 +1,4 @@
 import { Document, model, Schema } from 'mongoose';
-import randomstring from 'randomstring';
 
 export interface UrlDocument extends Url, Document {
   createdAt: string | Date;
@@ -14,7 +13,7 @@ const schema = new Schema<Url>(
     },
     shortUrl: {
       type: String,
-      default: randomstring.generate(6),
+      required: [true, 'short url field is required'],
     },
   },
   { timestamps: true }
